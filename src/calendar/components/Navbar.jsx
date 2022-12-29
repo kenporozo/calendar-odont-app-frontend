@@ -1,4 +1,4 @@
-import { useAuthStore, useCalendarStore } from "../../hooks/"
+import { useAuthStore, useCalendarStore, useDentistStore } from "../../hooks/"
 import "D:/db-nosql/calendar-odon-app/src/css/style.css"
 import "D:/db-nosql/calendar-odon-app/src/css/icomoon.css";
 import { NavLink } from "react-router-dom";
@@ -7,13 +7,15 @@ import { NavLink } from "react-router-dom";
 export const Navbar = () => {
 
 	const { startLogout, user } = useAuthStore();
-	const {startLoadingEvents, events} = useCalendarStore();
+	const { startLoadingEvents, events } = useCalendarStore();
+	const {setActiveDentist} = useDentistStore();
 
-	const onLogout = () =>{
+	const onLogout = () => {
 		startLogout();
 		startLoadingEvents();
-	} 
-	
+		setActiveDentist(null)
+	}
+
 	return (
 		<>
 			<div className="py-md-5 py-4 border-bottom">
@@ -48,30 +50,79 @@ export const Navbar = () => {
 					</button>
 					<div className="collapse navbar-collapse" id="ftco-nav">
 						<ul className="navbar-nav m-auto">
-							<li className="nav-item active"><a href="#" className="nav-link pl-0">Inicio</a></li>
+							<li
+								className="nav-item active"
+							>
+								<NavLink
+									to={"/calendar"}
+									className={({ isActive }) => {
+										return `${isActive ? "nav-link pl-0" : "nav-link pl-0"}`
+									}}
+								>
+									Inicio
+								</NavLink>
+								{/* <a href="#" className="nav-link pl-0">Inicio</a> */}
+							</li>
 							{
 								(localStorage.getItem("token"))
-								?
-								(<li className="nav-item">
-									<a
-										className="nav-link"
-										onClick={onLogout}
-										href="#"
-									>
-										Salir
-										&nbsp;
-										<i className="fas fa-sign-out-alt"></i>
-									</a>
-								</li>)
-								:
-								(<li className="nav-item">
-									<NavLink
-										to={"/auth/login"}
-										className="nav-link"
+									?
+									(user.role === "ADMIN_ROLE")
+										?
+										<>
+											<li className="nav-item">
+												<NavLink
+													to={"/dentist"}
+													className="nav-link"
+												>
+													Dentistas
+												</NavLink>
+											</li>
+											<li className="nav-item">
+												<a
+													className="nav-link"
+													onClick={onLogout}
+													href="#"
+												>
+													Salir
+													&nbsp;
+													<i className="fas fa-sign-out-alt"></i>
+												</a>
+											</li>
+										</>
+
+										:
+										// 	(<li className="nav-item">
+										// 		<a
+										// 			className="nav-link"
+										// 			onClick={onLogout}
+										// 			href="#"
+										// 		>
+										// 			Salir
+										// 			&nbsp;
+										// 			<i className="fas fa-sign-out-alt"></i>
+										// 		</a>
+										// 	</li>)
+										// :
+										(<li className="nav-item">
+											<a
+												className="nav-link"
+												onClick={onLogout}
+												href="#"
+											>
+												Salir
+												&nbsp;
+												<i className="fas fa-sign-out-alt"></i>
+											</a>
+										</li>)
+									:
+									(<li className="nav-item">
+										<NavLink
+											to={"/auth/login"}
+											className="nav-link"
 										>
-										Login
-									</NavLink>
-								</li>)
+											Login
+										</NavLink>
+									</li>)
 							}
 						</ul>
 					</div>

@@ -236,12 +236,14 @@ export const ReserveForm = () => {
                                                         <option disabled>Dentista</option>
                                                         {
                                                             dentists.map(dentist => {
-                                                                return (
-                                                                    <option
-                                                                        key={dentist._id}
-                                                                        value={dentist._id}
-                                                                    >{`${dentist.name} ${dentist.lastname}`}</option>
-                                                                )
+                                                                if(dentist.isActive){
+                                                                    return (
+                                                                        <option
+                                                                            key={dentist._id}
+                                                                            value={dentist._id}
+                                                                        >{`${dentist.name} ${dentist.lastname}`}</option>
+                                                                    )
+                                                                }
                                                             })
                                                         }
                                                     </select>
@@ -290,7 +292,7 @@ export const ReserveForm = () => {
                         <div className="consultation w-100 text-center px-4 px-md-5">
                             <h3 className="mb-4">Nuestro Personal</h3>
                             <p>Tenemos los dentistas más capacitados </p>
-                            {/* <a href="#" className="btn-custom">Conoce a nuestros doctores</a> */}
+                            <a href="#" className="btn-custom">Conoce a nuestros dentistas</a>
                         </div>
                     </div>
                 </div>

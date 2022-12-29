@@ -75,25 +75,6 @@ export const CalendarPage = () => {
         }else{
             await startLoadingEventsByFilter(idDentist);
         }
-
-
-        // if(localStorage.getItem('token')){
-        //     // localStorage.setItem("lastname", user.lastname);
-        //     await startSavingEvent({
-        //         start: formValues.start,
-        //         end: addHours(formValues.start,1),
-        //         user: user._id,
-        //         dentist: idDentist,
-        //     })
-        // }else{
-        //     event = formValues;
-        //     event.end = addHours(event.start,1);
-        //     event.dentist = idDentist;
-    
-        //     // TODO: 
-        //     console.log(event)
-        //     await startSavingEvent( event );
-        // }
     }
 
     return (

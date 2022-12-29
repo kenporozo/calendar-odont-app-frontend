@@ -1,67 +1,71 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { backendApi } from '../api';
-import { onAddNewDentist, onDeleteDentist, onLoadDentists } from '../store';
+import { onSetActiveDentist, onAddNewDentist, onUpdateDentist, onDeleteDentist, onLoadDentists } from '../store';
 
 
 export const useDentistStore = () => {
   
     const dispatch = useDispatch();
-    const { dentists } = useSelector( state => state.dentist );
+    const { dentists, activeDentist } = useSelector( state => state.dentist );
 
-    // const setActiveEvent = ( calendarEvent ) => {
-    //     dispatch( onSetActiveEvent( calendarEvent ) )
-    // }
+    const setActiveDentist = ( dentist ) => {
+        dispatch(onSetActiveDentist( dentist ));
+    }
 
-    // const startSavingEvent = async( calendarEvent ) => {
+    const startSavingDentist = async( dentist ) => {
         
-    //     try {
-    //         // if( calendarEvent.id ) {
-    //         //     // Actualizando
-    //         //     await calendarApi.put(`/events/${ calendarEvent.id }`, calendarEvent );
-    //         //     dispatch( onUpdateEvent({ ...calendarEvent, user }) );
-    //         //     return;
-    //         // } 
+        try {
+            if( dentist._id ) {
+                // Actualizando
+                const {rut, ...dentistUpdate} = dentist;
+                const {data} = await backendApi.put(`/dentists/${ dentist._id }`, dentistUpdate );
+                dispatch( onUpdateDentist(data.dentist) );
+                return;
+            } 
     
-    //         // Creando
-    //         const { data } = await backendApi.post('/reservations', calendarEvent );
-    //         // if(!user){
-    //         //     dispatch( onAddNewEvent({ ...calendarEvent, 
-    //         //                             _id: data.reservation._id, 
-    //         //                             user: {
-    //         //                                 _id: data.reservation._ip,
-    //         //                                 name: data.reservation.name
-    //         //                             } }) );
-    //         // }
-    //         dispatch( onAddNewEvent({ ...calendarEvent, _id: data.reservation._id, user }) );
-
-    //     } catch (error) {
-    //         console.log(error);
-    //         Swal.fire('Error al guardar', error.response.data.msg, 'error');
-    //     }
+            // Creando
+            const { data } = await backendApi.post('/dentists', dentist );
+            dispatch(onAddNewDentist(data.dentist))
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al guardar', error.response.data.msg, 'error');
+        }
 
        
         
-    // }
+    }
 
-    // const startDeletingEvent = async() => {
-    //     // Todo: Llegar al backend
-    //     try {
-    //         await backendApi.delete(`/events/${ activeEvent.id }` );
-    //         dispatch( onDeleteEvent() );
-    //     } catch (error) {
-    //         console.log(error);
-    //         Swal.fire('Error al eliminar', error.response.data.msg, 'error');
-    //     }
+    const startDeletingDentist = async(dentist) => {
+        try {
+            console.log(dentist);
+            const {data} = await backendApi.delete(`/dentists/${dentist._id}` );
+            console.log(data.dentist)
+                dispatch( onUpdateDentist(data.dentist) );
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al eliminar', error.response.data.msg, 'error');
+        }
 
-    // }
+    }
+    
+    const startActivatingDentist = async(dentist) => {
+        try {
+            console.log(dentist);
+            const {data} = await backendApi.put(`/dentists/${dentist._id}`, {isActive: true} );
+            dispatch( onUpdateDentist({...data.dentist}) );
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al eliminar', error.response.data.msg, 'error');
+        }
+
+    }
 
 
     const startLoadingDentists = async() => {
         try {
             
             const { data } = await backendApi.get('/dentists');
-            console.log(data.dentists)
             dispatch( onLoadDentists( data.dentists ) );
 
         } catch (error) {
@@ -74,14 +78,15 @@ export const useDentistStore = () => {
 
     return {
         //* Propiedades
-        // activeEvent,
+        activeDentist,
         dentists,
         // hasEventSelected: !!activeEvent,
 
         //* Métodos
-        // setActiveEvent,
-        // startDeletingEvent,
+        setActiveDentist,
+        startDeletingDentist,
         startLoadingDentists,
-        // startSavingEvent,
+        startSavingDentist,
+        startActivatingDentist
     }
 }

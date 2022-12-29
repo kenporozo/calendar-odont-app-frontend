@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Navigate, Route, Routes } from "react-router-dom";
 import { LoginPage } from "../auth";
 import { CalendarPage } from "../calendar";
+import { DentistPage } from '../dentist';
 import { useAuthStore } from '../hooks';
 
 export const AppRouter = () => {
@@ -25,8 +26,10 @@ export const AppRouter = () => {
             {
                 (status === "authenticated")
                 &&
-                // <Route path="/auth/*" element={}/>
-                <Route path="/*" element={<Navigate to={"/calendar/*"}/>} /> 
+                <>
+                    <Route path="/*" element={<Navigate to={"/calendar/*"}/>} />
+                    <Route path="/dentist" element={<DentistPage />} />
+                </>
             }
             <Route path="/calendar/*" element={<CalendarPage />}/> 
             <Route path="/*" element={<LoginPage />}/>
