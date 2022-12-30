@@ -24,15 +24,6 @@ export const dentistSlice = createSlice({
         return dentist;
       });
     },
-    onDeleteDentist: (state, {payload}) => {
-        state.dentists = state.dentists.map((dentist) => {
-            if (dentist._id === payload._id) {
-              return payload;
-            }
-    
-            return dentist;
-          });
-    },
     onLoadDentists: (state, { payload = [] }) => {
       state.isLoadingDentists = false;
       payload.forEach((dentist) => {
@@ -51,6 +42,5 @@ export const {
   onSetActiveDentist,
   onAddNewDentist,
   onUpdateDentist,
-  onDeleteDentist,
   onLoadDentists,
 } = dentistSlice.actions;

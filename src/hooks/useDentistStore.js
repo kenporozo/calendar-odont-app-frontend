@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { backendApi } from '../api';
-import { onSetActiveDentist, onAddNewDentist, onUpdateDentist, onDeleteDentist, onLoadDentists } from '../store';
+import { onSetActiveDentist, onAddNewDentist, onUpdateDentist, onLoadDentists } from '../store';
 
 
 export const useDentistStore = () => {
@@ -53,7 +53,7 @@ export const useDentistStore = () => {
         try {
             console.log(dentist);
             const {data} = await backendApi.put(`/dentists/${dentist._id}`, {isActive: true} );
-            dispatch( onUpdateDentist({...data.dentist}) );
+            dispatch( onUpdateDentist(data.dentist) );
         } catch (error) {
             console.log(error);
             Swal.fire('Error al eliminar', error.response.data.msg, 'error');
@@ -80,7 +80,6 @@ export const useDentistStore = () => {
         //* Propiedades
         activeDentist,
         dentists,
-        // hasEventSelected: !!activeEvent,
 
         //* Métodos
         setActiveDentist,
